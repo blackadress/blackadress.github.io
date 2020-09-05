@@ -1,15 +1,15 @@
 ---
 layout: page
-title: About
-permalink: /about/
+title: Acerca de
+permalink: /acerca-de/
 ---
 
 Some information about you!
 
-### More Information
+### Más información
 
 A place to include any other types of information that you'd like to include about yourself.
 
-### Contact me
+### Contáctame
 
 [blackadress.01@gmail.com](mailto:blackadress@gmail.com)

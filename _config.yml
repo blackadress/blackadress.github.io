@@ -49,6 +49,12 @@ url:
 # then add in the baseurl here, like this: "/repository-name"
 baseurl: ""
 
+collections_dir: collections
+
+collections:
+  proyectos:
+    output: true
+
 #
 # !! You don't need to change any of the configuration flags below !!
 #
