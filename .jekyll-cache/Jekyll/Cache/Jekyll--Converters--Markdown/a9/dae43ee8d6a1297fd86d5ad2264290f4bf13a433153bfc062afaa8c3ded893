@@ -1,0 +1,26 @@
+I"f<p>Una aplicación de mensajería instántanea es relativamente fácil de programar, con el uso adecuado de
+herramientas podemos tener nuestro propio sistema de mensajería en menos de 20 minutos.
+El pequeño programa que te voy a mostrar aquí tiene sus problemas pero es un buen proyecto
+didáctico para familiarizarte mejor con el uso de Web Sockets.</p>
+
+<p>Si quieres tener una mirada a un proyecto más sencillo con Web Sockets, te recomiendo este <a href="/echo-server-nodejs">artículo</a>.</p>
+
+<p>El proyecto consiste de 2 clientes que pueden intercambiar mensajes mediante un servidor.
+Si el cliente 1 manda un ‘Hola’ el servidor debe mandar ese mensaje al cliente 2 y viceversa.</p>
+
+<p>Primero importemos los módulos que vamos a necesitar y definamos las cosas básicas:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">express</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">http</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">ws</span><span class="dl">"</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span>
+
+<span class="kd">let</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+<span class="kd">let</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="nx">app</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">wss</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">Server</span><span class="p">({</span> <span class="na">server</span><span class="p">:</span> <span class="nx">server</span><span class="p">,</span> <span class="na">path</span><span class="p">:</span> <span class="dl">"</span><span class="s2">/echo</span><span class="dl">"</span> <span class="p">});</span>
+</code></pre></div></div>
+
+:ET

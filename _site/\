@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Erland Huamán – Desarrollador de Software de Perú</title>
+    <title>Ejemplo de un servidor eco en nodejs usando Web Sockets (Echo Server Nodejs) – Erland Huamán – Desarrollador de Software de Perú</title>
 
         <meta charset="utf-8" />
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
@@ -14,6 +14,9 @@
     
     <meta name="author" content="Erland Huamán" />
 
+    
+    <meta property="og:title" content="Ejemplo de un servidor eco en nodejs usando Web Sockets (Echo Server Nodejs)" />
+    <meta property="twitter:title" content="Ejemplo de un servidor eco en nodejs usando Web Sockets (Echo Server Nodejs)" />
     
 
     <!--[if lt IE 9]>
@@ -47,38 +50,61 @@
     </div>
 
     <div id="main" role="main" class="container">
-      <div class="posts">
-  
-    <article class="post">
+      <article class="post">
+  <h1>Ejemplo de un servidor eco en nodejs usando Web Sockets (Echo Server Nodejs)</h1>
 
-      <h1><a href="/websokets-mensajeria/">Mensajería sencilla usando Web Sockets</a></h1>
-
-      <div class="entry">
-        <p>Una aplicación de mensajería instántanea es relativamente fácil de programar, con el uso adecuado de
-herramientas podemos tener nuestro propio sistema de mensajería en menos de 20 minutos.
-El pequeño programa que te voy a mostrar aquí tiene sus problemas pero es un buen proyecto
-didáctico para familiarizarte mejor con el uso de Web Sockets.</p>
-
-      </div>
-
-      <a href="/websokets-mensajeria/" class="read-more">Leer más</a>
-    </article>
-  
-    <article class="post">
-
-      <h1><a href="/echo-server-nodejs/">Ejemplo de un servidor eco en nodejs usando Web Sockets (Echo Server Nodejs)</a></h1>
-
-      <div class="entry">
-        <p>Un servidor de eco es una aplicación que permite la conexión entre cliente y servidor
+  <div class="entry">
+    Un servidor de eco es una aplicación que permite la conexión entre cliente y servidor
 de forma tal que el cliente pueda mandar un mensaje al servidor y el servidor reciba
-el mensaje y reenviarlo (hacer eco) al cliente.</p>
+el mensaje y reenviarlo (hacer eco) al cliente.
 
-      </div>
+El nombre es autodescriptivo, no es un concepto complicado. Si el cliente manda 'Hola',
+el servidor recibe 'Hola' y manda 'Hola' al cliente. 
+El proyecto es sencillo y podemos usarlo para aprender acerca de Web Sockets, bien empecemos.
 
-      <a href="/echo-server-nodejs/" class="read-more">Leer más</a>
-    </article>
+Lo primero que necesitamos es crear el proyecto con node:
+```bash
+$ mkdir echo-server && cd echo-server && npm init -y
+```
+Ahora instalemos las dependencias, utilizaremos la librería 'ws' por ser bastante transparente
+y el siempre confiable 'express' como servidor.
+
+```bash
+$ npm i express ws
+```
+
+Crearemos el punto de entrada de la aplicación 'index.js' y dentro escribiremos lo siguiente:
+
+```javascript
+const express = require('express')
+const http = require('http')
+const WebSocket = require('ws')
+
+const PORT = 3000
+
+let app = express()
+let server = http.Server(app)
+
+const wss = new WebSocket.Server({ server })
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+    ws.send(message)
+  });
+ 
+  ws.send('Conexión con el servidor de eco exitosa');
+});
+```
+
+  </div>
+
+  <div class="date">
+    Written on 
+  </div>
+
   
-</div>
+</article>
 
     </div>
 

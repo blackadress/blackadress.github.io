@@ -1,0 +1,106 @@
+I"5+<p>Un servidor de eco es una aplicación que permite la conexión entre cliente y servidor
+de forma tal que el cliente pueda mandar un mensaje al servidor y el servidor reciba
+el mensaje y reenviarlo (hacer eco) al cliente.</p>
+
+<p>El nombre es autodescriptivo, no es un concepto complicado. Si el cliente manda ‘Hola’,
+el servidor recibe ‘Hola’ y manda ‘Hola’ al cliente. 
+El proyecto es sencillo y podemos usarlo para aprender acerca de Web Sockets, bien empecemos.</p>
+
+<p>Lo primero que necesitamos es crear el proyecto con node:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir </span>echo-server <span class="o">&amp;&amp;</span> <span class="nb">cd </span>echo-server <span class="o">&amp;&amp;</span> npm init <span class="nt">-y</span>
+</code></pre></div></div>
+<p>Ahora instalemos las dependencias, utilizaremos la librería ‘ws’ por ser bastante transparente
+y el siempre confiable ‘express’ como servidor.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm i express ws
+</code></pre></div></div>
+
+<p>Crearemos el punto de entrada de la aplicación ‘index.js’ y adentro vamos a definir nuestro servidor.</p>
+
+<p>Lo primero que haremos es importar todas las librerías que necesitaremos.
+Primero el siempre confiable ‘express’, también necesitamos el módulo ‘http’ de node y
+finalmente la librería de WebSocket ‘ws’.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">ws</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Ahora definamos el puerto e inicializamos el servidor express, luego inicializamos el servidor de ‘http’.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="mi">3000</span>
+
+<span class="kd">let</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">()</span>
+<span class="kd">let</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Ahora inicializamos el WebSocket, como argumento le pasamos un objeto con los parametros ‘server’ y ‘path’.
+Las conexiones que llegan al servidor las manejaremos mediante eventos, ‘on connection’ es el evento que se dispara
+cuando el servidor obtiene una conexión; el evento ‘on message’ se dispara cuando el ‘socket’ recibe un mensaje.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">wss</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">Server</span><span class="p">({</span> <span class="na">server</span><span class="p">:</span> <span class="nx">server</span><span class="p">,</span> <span class="na">path</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/echo</span><span class="dl">'</span>  <span class="p">})</span>
+
+<span class="nx">wss</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">connection</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="nx">connection</span><span class="p">(</span><span class="nx">ws</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">ws</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="nx">incoming</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">received: %s</span><span class="dl">'</span><span class="p">,</span> <span class="nx">message</span><span class="p">);</span>
+    <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+  <span class="p">});</span>
+ 
+  <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Conexión con el servidor de eco exitosa</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<p>Finalmente iniciamos a escuchar en el servidor.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Aplicacion corriendo en puerto:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">PORT</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>Este es todo el código.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">ws</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="mi">3000</span>
+
+<span class="kd">let</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">()</span>
+<span class="kd">let</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">wss</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">Server</span><span class="p">({</span> <span class="na">server</span><span class="p">:</span> <span class="nx">server</span><span class="p">,</span> <span class="na">path</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/echo</span><span class="dl">'</span>  <span class="p">})</span>
+
+<span class="nx">wss</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">connection</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="nx">connection</span><span class="p">(</span><span class="nx">ws</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">ws</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="nx">incoming</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">received: %s</span><span class="dl">'</span><span class="p">,</span> <span class="nx">message</span><span class="p">);</span>
+    <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span>
+  <span class="p">});</span>
+ 
+  <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Conexión con el servidor de eco exitosa</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Aplicacion corriendo en puerto:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">PORT</span><span class="p">)</span>
+<span class="p">})</span>
+
+</code></pre></div></div>
+
+<p>Ahora que ya tenemos nuestro servidor, tenemos que escribir un cliente.
+Para hacer esto solo necesitamos una página html y algo de javascript.
+Creamos un documento ‘index.html’, lo único que importa de este documento
+es el javascript, puedes anexarlo como un documento separado con el tag ‘&lt;script:src&gt;’
+o directamente escribir en un tag ‘&lt;script&gt;’.</p>
+
+<p>´´´javascript
+const echoSocketUrl = ‘ws//localhost:3000/echo/’
+const socket = new WebSocket(echoSocketUrl);</p>
+
+<p>socket.onopen = () =&gt; {
+  socket.send(‘Here's some text that the server is urgently awaiting!’); 
+}</p>
+
+<p>socket.onmessage = e =&gt; {
+  console.log(‘Message from server:’, e.data);
+}</p>
+
+<p>´´´</p>
+:ET
