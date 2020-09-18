@@ -4,12 +4,17 @@ title: Acerca de
 permalink: /acerca-de/
 ---
 
-Some information about you!
-
 ### Más información
+Desarrollador de software basado en Perú, soy un apasionado de la tecnología que siempre busca aprender.
+Soy un jugador de equipo que valora encontrar soluciones efectivas y eficientes para los problemas 
+que pueda encontrar.
 
-A place to include any other types of information that you'd like to include about yourself.
+Puedes ver mis proyectos anteriores [aquí](../proyectos)
 
 ### Contáctame
 
-[blackadress.01@gmail.com](mailto:blackadress@gmail.com)
+[E-mail](mailto:blackadress@gmail.com)
+
+[Linkedin](https://www.linkedin.com/in/erland-huaman/)
+
+[Github](https://github.com/blackadress)
